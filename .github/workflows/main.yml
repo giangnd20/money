@@ -23,14 +23,20 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      # Bước này sẽ tự động thiết lập SDK và tự động đồng ý TẤT CẢ các license của Google
+      # Bước này sẽ tự cài đặt Android SDK Tools, TỰ ĐỘNG đồng ý các license 
+      # và TỰ ĐỘNG cấu hình lệnh sdkmanager vào PATH hệ thống toàn cục.
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      # SỬA LỖI TẠI ĐÂY: Sử dụng biến đường dẫn $ANDROID_HOME để gọi đúng file sdkmanager
+      # Gọi TRỰC TIẾP lệnh sdkmanager (Không dùng đường dẫn tuyệt đối)
       - name: Install required SDK packages
         run: |
-          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
+          sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
+
+      # Tạo file local.properties chứa đường dẫn SDK để tránh lỗi Gradle "SDK location not found"
+      - name: Create local.properties
+        run: |
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
