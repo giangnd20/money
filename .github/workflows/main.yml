@@ -2,10 +2,10 @@ name: Build Debug APK
 
 on:
   push:
-    branches: [ "main", "master" ] # Tự động chạy khi bạn push lên nhánh main hoặc master
+    branches: [ "main", "master" ]
   pull_request:
     branches: [ "main", "master" ]
-  workflow_dispatch: # Cho phép bạn bấm nút tự động build thủ công trên giao diện GitHub
+  workflow_dispatch:
 
 jobs:
   build:
@@ -16,7 +16,7 @@ jobs:
       uses: actions/checkout@v4
 
     - name: Thiết lập Java JDK 17
-      uses: actions/actions-setup-java@v4
+      uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
@@ -24,7 +24,7 @@ jobs:
 
     - name: Cấp quyền thực thi cho gradlew
       run: chmod +x gradlew
-      working-directory: ShopeeFoodDriver # Trỏ vào đúng thư mục chứa dự án của bạn
+      working-directory: ShopeeFoodDriver
 
     - name: Build Debug APK với Gradle
       run: ./gradlew assembleDebug
