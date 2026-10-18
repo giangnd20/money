@@ -23,31 +23,20 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
-      # THAY THẾ: Cài đặt và cấu hình Android SDK thủ công bằng mã lệnh
-      - name: Setup Android SDK Tools
-        run: |
-          mkdir -p mkdir -p $HOME/android-sdk/cmdline-tools
-          wget https://google.com -O cmdline-tools.zip
-          unzip -q cmdline-tools.zip -d $HOME/android-sdk/cmdline-tools
-          mv $HOME/android-sdk/cmdline-tools/cmdline-tools $HOME/android-sdk/cmdline-tools/latest
-          echo "ANDROID_HOME=$HOME/android-sdk" >> $GITHUB_ENV
-          echo "$HOME/android-sdk/cmdline-tools/latest/bin" >> $GITHUB_PATH
-          echo "$HOME/android-sdk/platform-tools" >> $GITHUB_PATH
-
-      # ÉP CHẤP NHẬN BẢN QUYỀN: Lệnh này xử lý triệt để googletv-license
+      # ĐỒNG Ý BẢN QUYỀN TRỰC TIẾP: Sử dụng bộ SDK có sẵn trên máy ảo Ubuntu của GitHub
       - name: Accept Android SDK Licenses
         run: |
-          yes | $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager --licenses
+          yes | $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager --licenses
 
-      # Cài đặt các package cần thiết để build ứng dụng
+      # Cập nhật/Cài đặt thêm các gói SDK cấu hình dự án của bạn
       - name: Install required SDK packages
         run: |
-          $HOME/android-sdk/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
 
-      # Tạo file cấu hình đường dẫn SDK cho Gradle
+      # Ghi đè file local.properties chỉ định chính xác đường dẫn SDK cho Gradle
       - name: Create local.properties
         run: |
-          echo "sdk.dir=$HOME/android-sdk" > local.properties
+          echo "sdk.dir=$ANDROID_HOME" > local.properties
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
