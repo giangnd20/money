@@ -23,14 +23,14 @@ jobs:
           distribution: 'temurin'
           cache: gradle
 
+      # Bước này sẽ tự động thiết lập SDK và tự động đồng ý TẤT CẢ các license của Google
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
 
-      - name: Accept Android SDK licenses
-        run: yes | sdkmanager --licenses || true
-
+      # SỬA LỖI TẠI ĐÂY: Sử dụng biến đường dẫn $ANDROID_HOME để gọi đúng file sdkmanager
       - name: Install required SDK packages
-        run: sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
+        run: |
+          $ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager "platforms;android-34" "build-tools;34.0.0" "platform-tools"
 
       - name: Make gradlew executable
         run: chmod +x ./gradlew
